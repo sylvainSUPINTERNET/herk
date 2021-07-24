@@ -29,7 +29,7 @@ app.get('/api', (req, res) => {
 app.listen(PORT, async () => {
 
     try {
-        const sequelize = new Sequelize(process.env.DATABASE_URL);
+        const sequelize = new Sequelize(`${process.env.DATABASE_URL}?sslmode=require`);
         await sequelize.authenticate();
         console.log('Connection has been established successfully.');
       } catch (error) {
