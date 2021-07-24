@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "heroku-postbuild": "cd ./dpm && npm i && npm run build", 
+    "heroku-postbuild": "cd ./dpm && npm i && npm run build",
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node index.js",
     "dev": "cd ./dpm && npm run build && cd .. && node index.js"
@@ -14,6 +14,9 @@
   "dependencies": {
     "body-parser": "^1.19.0",
     "cors": "^2.8.5",
-    "express": "^4.17.1"
+    "express": "^4.17.1",
+    "pg": "^8.6.0",
+    "pg-hstore": "^2.3.4",
+    "sequelize": "^6.6.5"
   }
 }
