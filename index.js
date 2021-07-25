@@ -49,7 +49,7 @@ wss.on("connection", function(ws) {
 })
 
 
-server.listen(port, async () => {
+server.listen(PORT, async () => {
     // heroku config:set PGSSLMODE=no-verify
     try {
       const sequelize = new Sequelize(`${process.env.DATABASE_URL}`, {
