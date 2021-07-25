@@ -6,6 +6,7 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 const { Sequelize, DataTypes } = require('sequelize');
 const WebSocketServer = require("ws").Server
+const http = require("http");
 
 const bodyParser = require('body-parser');
 
@@ -27,6 +28,9 @@ app.get('/api', (req, res) => {
 
 
 
+
+let server = http.createServer(app);
+
 const wss = new WebSocketServer({server: server});
 console.log("WSS server created");
 
@@ -41,44 +45,43 @@ wss.on("connection", function(ws) {
     console.log("websocket connection close")
     clearInterval(id)
   });
-  
+
 })
 
 
-
-app.listen(PORT, async () => {
+server.listen(port, async () => {
     // heroku config:set PGSSLMODE=no-verify
     try {
-        const sequelize = new Sequelize(`${process.env.DATABASE_URL}`, {
-            dialectOptions: {
-                ssl: {      /* <----- Add SSL option */
-                  require: true,
-                  rejectUnauthorized: false 
-                }
+      const sequelize = new Sequelize(`${process.env.DATABASE_URL}`, {
+          dialectOptions: {
+              ssl: {      /* <----- Add SSL option */
+                require: true,
+                rejectUnauthorized: false 
               }
-        });
-        await sequelize.authenticate();
-        // DIRTY TEST
-        const User = sequelize.define('User', {
-          // Model attributes are defined here
-          firstName: {
-            type: DataTypes.STRING,
-            allowNull: false
-          },
-          lastName: {
-            type: DataTypes.STRING
-            // allowNull defaults to true
-          }
-        }, {
-          // Other model options go here
-        });
-        await sequelize.sync({force: true});
+            }
+      });
+      await sequelize.authenticate();
+      // DIRTY TEST
+      const User = sequelize.define('User', {
+        // Model attributes are defined here
+        firstName: {
+          type: DataTypes.STRING,
+          allowNull: false
+        },
+        lastName: {
+          type: DataTypes.STRING
+          // allowNull defaults to true
+        }
+      }, {
+        // Other model options go here
+      });
+      await sequelize.sync({force: true});
 
 
-        console.log('Connection has been established successfully.');
-      } catch (error) {
-        console.error('Unable to connect to the database:', error);
-      }
-    
+      console.log('Connection has been established successfully.');
+    } catch (error) {
+      console.error('Unable to connect to the database:', error);
+    }
+
     console.log(`server started on port ${PORT}`);
-});
+})
