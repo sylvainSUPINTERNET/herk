@@ -7,27 +7,30 @@ import react, {useEffect, useState, useRef} from "react";
 function App() {
   const [sharingUuid, setSharingUuid] = useState(nanoid(5));
   
-  let [filesUrls, setFilesUrl] = useState([])
+  let [filesUrls, setFilesUrl] = useState(new Map());
 
   useEffect( () => {
+
+    window.addEventListener("drop", (event) => {
+      event.preventDefault();
+      event.stopImmediatePropagation();
+      let m = new Map();
+      Array.from(event.dataTransfer.files).map(file => {
+        m.set(file.name, URL.createObjectURL(file));
+      })
+      filesUrls = m;
+      setFilesUrl(filesUrls);
+    });
+
+      
+    window.addEventListener("dragover", (event) => {
+      event.preventDefault();
+    });
+    
   }, [filesUrls]);
 
 
-  window.addEventListener("dragover", (event) => {
-    event.preventDefault();
-    console.log("test");
-  });
-
   
-  window.addEventListener("drop", (event) => {
-    event.preventDefault();
-    event.stopImmediatePropagation();
-    Array.from(event.dataTransfer.files).map(file => {
-      filesUrls = [...filesUrls, URL.createObjectURL(file)];
-    })
-    setFilesUrl(filesUrls);
-    console.log(event.dataTransfer.files)
-  });
 
 
   return (
@@ -40,12 +43,13 @@ function App() {
       </div>
       <div>
         Uploaded : 
-        <code>{filesUrls.length}</code>
-        { filesUrls && filesUrls.length > 0 && 
-        filesUrls.map( url => { <div>
-          <a src={url}>MONKA</a>
-          </div>
-        })
+        <code>{filesUrls.size}</code>
+        { filesUrls && filesUrls.size > 0 && 
+          [...filesUrls.keys()].map( key => {
+              return <div>
+                  <a href={filesUrls.get(key)} key={filesUrls.get(key)+key} download>{key}</a>
+                </div>
+          })
         }
       </div>
       </header>
