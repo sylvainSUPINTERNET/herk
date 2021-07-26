@@ -29,7 +29,7 @@ app.get('/api', (req, res) => {
 
 
 app.get('/*', (req,res) => {
-  res.sendFile(path.join(__dirname, 'dpm', 'build', 'public', 'index.html'));
+  res.sendFile(path.join(__dirname, 'dpm', 'build','index.html'));
 })
 
 
@@ -92,7 +92,7 @@ wss.on("connection", function(ws) {
 
 
 // DEV
-//server.listen(5000)
+// server.listen(5000)
 
 
 server.listen(PORT, async () => {
