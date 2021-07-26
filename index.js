@@ -20,12 +20,17 @@ app.use(express.static(buildFrontPath));
 
 
 
+
 app.get('/api', (req, res) => {
     res.status(200).json({
         "hello" : "bonjour"
     })
 })
 
+
+app.get('/*', (req,res) => {
+  res.sendFile(path.join(__dirname, 'dpm', 'build', 'public', 'index.html'));
+})
 
 
 
