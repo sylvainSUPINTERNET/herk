@@ -10,6 +10,8 @@ function App() {
   let [filesUrls, setFilesUrl] = useState(new Map());
   let [ws, setWs] = useState(new WebSocket("ws://localhost:5000"));
 
+  let [downloadableBlobUrls, setDownloadableBlobsUrl] = useState([]);
+
   useEffect( () => {
 
     let parts = new URL(window.location).pathname.split("/")
@@ -30,6 +32,18 @@ function App() {
       })
       filesUrls = m;
       setFilesUrl(filesUrls);
+    
+
+      let blobUrlsList = [];
+      [...filesUrls.keys()].map( (key,i) => {
+        blobUrlsList = [...blobUrlsList, filesUrls.get(key)]
+      })
+      ws.send(JSON.stringify({
+        "topic": "uploadFiles",
+        "blobFiles": blobUrlsList,
+        "hash": parts[1]
+      }));
+
     });
 
       
@@ -39,21 +53,23 @@ function App() {
 
     ws.onmessage = msg => {
       try {
-        const { data } = msg;
-        console.log(data);
+        const {topic, payload} = JSON.parse(msg.data);
+        if ( topic === "downloadable" ) {
+          setDownloadableBlobsUrl(payload);
+        }
       } catch ( e ) {
         console.log(e);
       }
     }
     ws.onopen = ev => {
       ws.send(JSON.stringify({
-        "topic":"incomming",
+        "topic":"join",
         "hash": sharingUuid
       }))
     }
 
     
-  }, [filesUrls, sharingUuid]);
+  }, [filesUrls, sharingUuid, downloadableBlobUrls]);
 
 
   
@@ -78,6 +94,15 @@ function App() {
                 </div>
           })
         }
+      </div>
+      <div>
+        <h1>Downloadable</h1>
+        <p>{downloadableBlobUrls.length}</p>
+        {downloadableBlobUrls && downloadableBlobUrls.length > 0 && downloadableBlobUrls.map( (blobUrl, i) => {
+          return <div>
+              <a href={blobUrl} key={i} download>{blobUrl}</a>
+            </div>
+        })}
       </div>
       </header>
     </div>

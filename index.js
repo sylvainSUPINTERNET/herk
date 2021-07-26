@@ -31,22 +31,63 @@ app.get('/api', (req, res) => {
 
 let server = http.createServer(app);
 
+
+// Should be replaced later with a database entries instead
+// Currently, kind of multimap structure in mem such as :
+// const clients = {
+//   hash1: [ws1, ws2 ...],
+//   hash2: [....]
+// };
+
+const clients = {};
+
 const wss = new WebSocketServer({server: server});
 console.log("WSS server created");
 
 wss.on("connection", function(ws) {
-  let id = setInterval(function() {
-    ws.send(JSON.stringify(new Date()), function() {  })
-  }, 1000)
-
+  ws.send(JSON.stringify(new Date()), function() {  })
   console.log("websocket connection open")
 
   ws.on("close", function() {
     console.log("websocket connection close")
-    clearInterval(id)
   });
 
+  ws.on('message', msg => {
+    let data = JSON.parse(msg);
+    if ( data.hash && data.hash !== "" && data.topic && data.topic === "join"){
+      console.log(`New socket claims ${data.hash}`);
+
+      if (  Object.keys(clients).filter(el => data.hash).length === 0 ) {
+        // first user for this hash
+        console.log("first user for this hash")
+        clients[data.hash] = [ws];
+      } else {
+        // join "room" / push new ws for this hash
+        console.log("join room for this hash")
+        clients[data.hash] = [...clients[data.hash], ws];
+      }
+      
+      clients[data.hash].map( socket => socket.send(JSON.stringify({
+        "topic": "newUser",
+        "payload": "new user has joined the room !"
+      })));
+    }
+    
+    if ( data.hash && data.hash !== "" && data.topic && data.topic === "uploadFiles" ) {
+      console.log("Sending files to " + data.hash)
+      clients[data.hash].map( socket => socket.send(JSON.stringify({
+        "topic": "downloadable",
+        "payload": data.blobFiles
+      })));
+    }
+
+  })
+
 })
+
+
+// DEV
+//server.listen(5000)
 
 
 server.listen(PORT, async () => {
