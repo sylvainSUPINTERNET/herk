@@ -8,7 +8,7 @@ function App() {
   const [sharingUuid, setSharingUuid] = useState("");
   
   let [filesUrls, setFilesUrl] = useState(new Map());
-  let [ws, setWs] = useState(new WebSocket("ws://localhost:5000"));
+  let [ws, setWs] = useState(new WebSocket("wss://herkdpm.herokuapp.com")); // DEV - useState(new WebSocket("ws://localhost:5000"));
 
   let [downloadableBlobUrls, setDownloadableBlobsUrl] = useState([]);
 
