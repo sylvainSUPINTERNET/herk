@@ -2,9 +2,13 @@
 @import url('https://fonts.googleapis.com/css?family=Ubuntu');
 
 body {
-background: #40E0D0;  /* fallback for old browsers */
-background: -webkit-linear-gradient(to bottom, #FF0080, #FF8C00, #40E0D0);  /* Chrome 10-25, Safari 5.1-6 */
-background: linear-gradient(to bottom, #FF0080, #FF8C00, #40E0D0); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+  background: linear-gradient(186deg, #e80000, #e800cb, #00e813, #00c7e8, #c4e800, #9b4594);
+  background-size: 1200% 1200%;
+
+  -webkit-animation: AnimationName 60s ease infinite;
+  -moz-animation: AnimationName 60s ease infinite;
+  animation: AnimationName 60s ease infinite;
+
 
   height: 100vh;
   margin: 0;
@@ -73,4 +77,42 @@ pre {
   to {
     transform: rotate(360deg);
   }
+}
+
+.card-1 {
+  box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+  transition: all 0.3s cubic-bezier(.25,.8,.25,1);
+}
+
+.card-1:hover {
+  box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
+}
+
+.css-selector {
+  background: linear-gradient(186deg, #e80000, #e800cb, #00e813, #00c7e8, #c4e800, #9b4594);
+  background-size: 1200% 1200%;
+
+  -webkit-animation: AnimationName 11s ease infinite;
+  -moz-animation: AnimationName 11s ease infinite;
+  animation: AnimationName 11s ease infinite;
+}
+
+/**
+Cool : https://www.gradient-animator.com/
+**/
+
+@-webkit-keyframes AnimationName {
+  0%{background-position:53% 0%}
+  50%{background-position:48% 100%}
+  100%{background-position:53% 0%}
+}
+@-moz-keyframes AnimationName {
+  0%{background-position:53% 0%}
+  50%{background-position:48% 100%}
+  100%{background-position:53% 0%}
+}
+@keyframes AnimationName {
+  0%{background-position:53% 0%}
+  50%{background-position:48% 100%}
+  100%{background-position:53% 0%}
 }

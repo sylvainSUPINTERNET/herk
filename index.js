@@ -45,6 +45,7 @@ let server = http.createServer(app);
 // };
 
 const clients = {};
+const uploads = {};
 
 const wss = new WebSocketServer({server: server});
 console.log("WSS server created");
@@ -52,6 +53,8 @@ console.log("WSS server created");
 wss.on("connection", function(ws) {
   ws.send(JSON.stringify(new Date()), function() {  })
   console.log("websocket connection open")
+
+
 
   ws.on("close", function() {
     console.log("websocket connection close")
@@ -68,18 +71,30 @@ wss.on("connection", function(ws) {
         clients[data.hash] = [ws];
       } else {
         // join "room" / push new ws for this hash
-        console.log("join room for this hash")
-        clients[data.hash] = [...clients[data.hash], ws];
+        console.log("join room for this hash");
+        clients[data.hash].push(ws);
       }
       
       clients[data.hash].map( socket => socket.send(JSON.stringify({
         "topic": "newUser",
-        "payload": "new user has joined the room !"
+        "payload": "new user has joined the room !",
+        "currentFiles": uploads[data.hash] ? uploads[data.hash] : []
       })));
     }
-    
     if ( data.hash && data.hash !== "" && data.topic && data.topic === "uploadFiles" ) {
       console.log("Sending files to " + data.hash)
+      
+      // Push blob URL in mem
+      if (  Object.keys(uploads).filter(el => data.hash).length === 0 ) {
+        console.log("new entry for hash / upload")
+        uploads[data.hash] = data.blobFiles;
+      } else {
+        // join "room" / push new ws for this hash
+        console.log("add files for hash");
+        uploads[data.hash] = [...uploads[data.hash], ...data.blobFiles ];
+      }
+
+      // Notify the room
       clients[data.hash].map( socket => socket.send(JSON.stringify({
         "topic": "downloadable",
         "payload": data.blobFiles
@@ -92,7 +107,7 @@ wss.on("connection", function(ws) {
 
 
 // DEV
-// server.listen(5000)
+//server.listen(5000)
 
 
 server.listen(PORT, async () => {

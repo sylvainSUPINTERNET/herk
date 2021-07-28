@@ -3,12 +3,13 @@ import './App.css';
 import { nanoid } from 'nanoid'
 
 import react, {useEffect, useState, useRef} from "react";
+import { conf } from './config';
 
 function App() {
   const [sharingUuid, setSharingUuid] = useState("");
   
   let [filesUrls, setFilesUrl] = useState(new Map());
-  let [ws, setWs] = useState(new WebSocket("wss://herkdpm.herokuapp.com")); // DEV - useState(new WebSocket("ws://localhost:5000"));
+  let [ws, setWs] = useState(new WebSocket(conf.WS_URL)); // DEV - useState(new WebSocket("ws://localhost:5000"));
 
   let [downloadableBlobUrls, setDownloadableBlobsUrl] = useState([]);
 
@@ -52,6 +53,7 @@ function App() {
     });
 
     ws.onmessage = msg => {
+      console.log(msg);
       try {
         const {topic, payload} = JSON.parse(msg.data);
         if ( topic === "downloadable" ) {
@@ -76,35 +78,46 @@ function App() {
 
 
   return (
-    <div className="App">
-      <header className="App-header">
-      <div className="container">
-        <p> 🤝 {sharingUuid} </p>
-        <div>
-          <h1>Uplaod</h1>
+    <div>
+
+      <div>
+        <div style={{display: "flex", justifyContent: 'center'}}>
+          <p> 🤝 <span style={{"background": "red", "padding" :"10px", "borderRadius": "15px"}} className="card-1">{sharingUuid}</span> </p>
         </div>
       </div>
-      <div>
-        Uploaded : 
-        <code>{filesUrls.size}</code>
-        { filesUrls && filesUrls.size > 0 && 
-          [...filesUrls.keys()].map( (key,i) => {
+
+
+
+      <div style={{"display": "flex", "flexFlow":"wrap"}}>
+
+      <div style={{"flex":1}}>
+          <div>
+            <h1 style={{textAlign: 'center'}}>Uploaded</h1>
+            { filesUrls && filesUrls.size > 0 && 
+                [...filesUrls.keys()].map( (key,i) => {
+                    return <div>
+                          <a href={filesUrls.get(key)} key={i} download>{key}</a>
+                      </div>
+                })
+              }
+          </div>
+        </div>
+
+        <div style={{"flex":1}}>
+          <div>
+            <h1 style={{textAlign: 'center'}}>Exposed medias</h1>
+            {downloadableBlobUrls && downloadableBlobUrls.length > 0 && downloadableBlobUrls.map( (blobUrl, i) => {
               return <div>
-                  <a href={filesUrls.get(key)} key={i} download>{key}</a>
+                  <a href={blobUrl} key={i} download>{blobUrl}</a>
                 </div>
-          })
-        }
+            })}
+          </div>
+        </div>
       </div>
-      <div>
-        <h1>Downloadable</h1>
-        <p>{downloadableBlobUrls.length}</p>
-        {downloadableBlobUrls && downloadableBlobUrls.length > 0 && downloadableBlobUrls.map( (blobUrl, i) => {
-          return <div>
-              <a href={blobUrl} key={i} download>{blobUrl}</a>
-            </div>
-        })}
-      </div>
-      </header>
+
+
+
+
     </div>
   );
 }
