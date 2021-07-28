@@ -53,11 +53,17 @@ function App() {
     });
 
     ws.onmessage = msg => {
-      console.log(msg);
+  
       try {
         const {topic, payload} = JSON.parse(msg.data);
         if ( topic === "downloadable" ) {
           setDownloadableBlobsUrl(payload);
+        }
+
+        if ( topic === "newUser" ) {
+          if (  JSON.parse(msg.data).currentFiles ) {
+            setDownloadableBlobsUrl(JSON.parse(msg.data).currentFiles);
+          }
         }
       } catch ( e ) {
         console.log(e);
