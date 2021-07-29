@@ -29,7 +29,7 @@ function App() {
       event.stopImmediatePropagation();
       let m = new Map();
       Array.from(event.dataTransfer.files).map(file => {
-        m.set(file.name, URL.createObjectURL(file));
+        m.set(file.name, `${file.name}$${URL.createObjectURL(file)}`);
       })
       filesUrls = m;
       setFilesUrl(filesUrls);
@@ -137,7 +137,7 @@ function App() {
             { filesUrls && filesUrls.size > 0 && 
                 [...filesUrls.keys()].map( (key,i) => {
                     return <div>
-                          <a href={filesUrls.get(key)} key={i} download>{key}</a>
+                          <a href={filesUrls.get(key).split("$")[1]} key={i} download>{key}</a>
                       </div>
                 })
               }
@@ -149,7 +149,7 @@ function App() {
             <h1 style={{textAlign: 'center'}}>Exposed medias</h1>
             {downloadableBlobUrls && downloadableBlobUrls.length > 0 && downloadableBlobUrls.map( (blobUrl, i) => {
               return <div>
-                  <a href={blobUrl} key={i} download>{blobUrl}</a>
+                  <a href={blobUrl.split("$")[1]} key={i} download>{blobUrl.split("$")[0]}</a>
                 </div>
             })}
           </div>
