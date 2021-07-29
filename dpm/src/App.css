@@ -1,14 +1,33 @@
 @import url('https://fonts.googleapis.com/css?family=Ubuntu+Mono');
 @import url('https://fonts.googleapis.com/css?family=Ubuntu');
 
+
+.neonText {
+  color: #fff;
+  text-shadow:
+      0 0 7px #fff,
+      0 0 10px #fff,
+      0 0 21px #fff,
+      0 0 99px #0fa,
+      0 0 82px #0fa,
+      0 0 92px #0fa,
+      0 0 102px #0fa,
+      0 0 151px #0fa;
+}
+
+
 body {
-  background: linear-gradient(186deg, #e80000, #e800cb, #00e813, #00c7e8, #c4e800, #9b4594);
+  /* background: linear-gradient(186deg, #e80000, #e800cb, #00e813, #00c7e8, #c4e800, #9b4594);
   background-size: 1200% 1200%;
 
   -webkit-animation: AnimationName 60s ease infinite;
   -moz-animation: AnimationName 60s ease infinite;
-  animation: AnimationName 60s ease infinite;
+  animation: AnimationName 60s ease infinite; */
 
+  background: #03001e;  /* fallback for old browsers */
+  background: -webkit-linear-gradient(to right, #fdeff9, #ec38bc, #7303c0, #03001e);  /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(to right, #fdeff9, #ec38bc, #7303c0, #03001e); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+  
 
   height: 100vh;
   margin: 0;

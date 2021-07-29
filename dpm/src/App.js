@@ -6,6 +6,10 @@ import react, {useEffect, useState, useRef} from "react";
 import { conf } from './config';
 import 'react-toastify/dist/ReactToastify.css';
 
+import { Card, Button } from 'react-bootstrap';
+import { FcDocument } from "react-icons/fc";
+
+
 function App() {
   const [sharingUuid, setSharingUuid] = useState("");
   
@@ -129,9 +133,8 @@ function App() {
         pauseOnHover
         />
         
-      <div style={{"display": "flex", "flexFlow":"wrap"}}>
 
-      <div style={{"flex":1}}>
+      {/* <div style={{"flex":1}}>
           <div>
             <h1 style={{textAlign: 'center'}}>Uploaded</h1>
             { filesUrls && filesUrls.size > 0 && 
@@ -142,19 +145,43 @@ function App() {
                 })
               }
           </div>
-        </div>
+        </div> */}
 
-        <div style={{"flex":1}}>
+        <div>
           <div>
-            <h1 style={{textAlign: 'center'}}>Exposed medias</h1>
-            {downloadableBlobUrls && downloadableBlobUrls.length > 0 && downloadableBlobUrls.map( (blobUrl, i) => {
-              return <div>
-                  <a href={blobUrl.split("$")[1]} key={i} download>{blobUrl.split("$")[0]}</a>
-                </div>
-            })}
+            <h1 style={{textAlign: 'center', color: "ghostwhite", margin: "0.5em"}} className="">Sharing your files !</h1>
+              <div className="container text-center" style={{"color": "ghostwhite"}}>
+                <p className="mt-2" style={{"fontSize": "1.5em"}} >👽 Share the code to your friends</p>
+                <p className="mt-2" style={{"fontSize": "1.5em"}} >🗃️ Drag and drop your files here</p>
+                <p className="mt-2" style={{"fontSize": "1.5em"}} >💸 It's free and anonymous forever</p>
+              </div>
+
+
+
+
+              <div style={{"display": "flex", "flexFlow": "wrap", justifyContent: "center"}}>
+
+                  {downloadableBlobUrls && downloadableBlobUrls.length > 0 && downloadableBlobUrls.map( (blobUrl, i) => {
+                    return <div className="card-1 m-2">
+                      <Card style={{            "background": "#360033",
+                          "background" :"-webkit-linear-gradient(to right, #41295a, #41295a, #360033)",
+                          "background": "linear-gradient(to right, #41295a, #41295a, #360033)"}}>
+                        <Card.Body>
+                          <Card.Title> 🗂️ <a style={{"color": "ghostwhite"}} href={blobUrl.split("$")[1]} key={i} download>{blobUrl.split("$")[0]}</a> </Card.Title>
+                        </Card.Body>
+                      </Card>
+                      </div>
+                  })}
+              </div> 
+
+
+
           </div>
+
+
+
+
         </div>
-      </div>
 
 
 
