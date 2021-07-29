@@ -1,9 +1,10 @@
 import logo from './logo.svg';
 import './App.css';
 import { nanoid } from 'nanoid'
-
+import { ToastContainer, toast } from 'react-toastify';
 import react, {useEffect, useState, useRef} from "react";
 import { conf } from './config';
+import 'react-toastify/dist/ReactToastify.css';
 
 function App() {
   const [sharingUuid, setSharingUuid] = useState("");
@@ -22,7 +23,6 @@ function App() {
       let newUrl = `${window.location.origin}/${nanoid(5)}`;
       window.location.href = `${newUrl}`;
     }
-    
 
     window.addEventListener("drop", (event) => {
       event.preventDefault();
@@ -81,19 +81,54 @@ function App() {
 
 
   
+  const copyToClipboard = () => {
+    console.log(sharingUuid);
+    toast.dark(`Copied ${sharingUuid} !`, {
+      position: "top-right",
+      autoClose: 1000,
+      hideProgressBar: true,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      });
 
+      const el = document.createElement('textarea');
+      el.value = sharingUuid;
+      document.body.appendChild(el);
+      el.select();
+      document.execCommand('copy');
+      document.body.removeChild(el);
+  }
+  
 
   return (
     <div>
-
       <div>
-        <div style={{display: "flex", justifyContent: 'center'}}>
-          <p> 🤝 <span style={{"background": "red", "padding" :"10px", "borderRadius": "15px"}} className="card-1">{sharingUuid}</span> </p>
+        <div style={{display: "flex", justifyContent: 'center', fontSize: "28px"}} onClick={copyToClipboard}>
+          <p> <span style={{
+            "background": "#FEAC5E",
+            "background" :"-webkit-linear-gradient(to right, #4BC0C8, #C779D0, #FEAC5E)",
+            "background": "linear-gradient(to right, #4BC0C8, #C779D0, #FEAC5E)",
+             "padding" :"10px",
+             "cursor": "pointer",
+              "borderRadius": "15px"}} className="card-1"> 🤝 {sharingUuid} 👽</span> </p>
         </div>
       </div>
 
 
-
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        />
+        
       <div style={{"display": "flex", "flexFlow":"wrap"}}>
 
       <div style={{"flex":1}}>
