@@ -18,6 +18,25 @@ function App() {
 
   let [downloadableBlobUrls, setDownloadableBlobsUrl] = useState([]);
 
+  const blob2b64 = (blob) => new Promise( (resolve, reject) => {
+    const reader = new FileReader;
+    reader.onerror = () => {};
+    reader.onload = () => {
+         resolve(reader.result)
+    };
+    reader.readAsDataURL(blob);
+  });
+
+  const convertBlobToBase64 = (blob) => {
+    const reader = new FileReader;
+    reader.onerror = () => {};
+    reader.onload = () => {
+        return reader.result
+    };
+    reader.readAsDataURL(blob);
+  };
+
+
   useEffect( () => {
 
     let parts = new URL(window.location).pathname.split("/")
@@ -32,22 +51,31 @@ function App() {
       event.preventDefault();
       event.stopImmediatePropagation();
       let m = new Map();
-      Array.from(event.dataTransfer.files).map(file => {
-        m.set(file.name, `${file.name}$${URL.createObjectURL(file)}`);
-      })
-      filesUrls = m;
-      setFilesUrl(filesUrls);
-    
+      let arrFilesDataTransfer = Array.from(event.dataTransfer.files);
+      arrFilesDataTransfer.map( async (file,i) => {
+        blob2b64(file).then( b64Url => {
 
-      let blobUrlsList = [];
-      [...filesUrls.keys()].map( (key,i) => {
-        blobUrlsList = [...blobUrlsList, filesUrls.get(key)]
-      })
-      ws.send(JSON.stringify({
-        "topic": "uploadFiles",
-        "blobFiles": blobUrlsList,
-        "hash": parts[1]
-      }));
+          m.set(file.name, `${file.name}$${URL.createObjectURL(file)}$${b64Url}`);
+
+          if ( arrFilesDataTransfer.length - 1 === i ) {
+            filesUrls = m;
+            setFilesUrl(filesUrls);
+                
+            let blobUrlsList = [];
+            [...filesUrls.keys()].map( (key,i) => {
+              blobUrlsList = [...blobUrlsList, filesUrls.get(key)]
+            })
+
+            ws.send(JSON.stringify({
+              "topic": "uploadFiles",
+              "blobFiles": blobUrlsList,
+              "hash": parts[1]
+            }));
+      
+          }
+        }).catch(err => console.log(err))
+      });
+
 
     });
 
@@ -161,13 +189,15 @@ function App() {
 
               <div style={{"display": "flex", "flexFlow": "wrap", justifyContent: "center"}}>
 
-                  {downloadableBlobUrls && downloadableBlobUrls.length > 0 && downloadableBlobUrls.map( (blobUrl, i) => {
+                  {downloadableBlobUrls && downloadableBlobUrls.length > 0 && downloadableBlobUrls.map((blobUrl, i) => {
                     return <div className="card-1 m-2">
                       <Card style={{            "background": "#360033",
                           "background" :"-webkit-linear-gradient(to right, #41295a, #41295a, #360033)",
                           "background": "linear-gradient(to right, #41295a, #41295a, #360033)"}}>
                         <Card.Body>
                           <Card.Title> 🗂️ <a style={{"color": "ghostwhite"}} href={blobUrl.split("$")[1]} key={i} download>{blobUrl.split("$")[0]}</a> </Card.Title>
+                          <Card.Title> 🗂️ <a style={{"color": "ghostwhite"}} href={blobUrl.split("$")[2]} key={i} download>{blobUrl.split("$")[0]} - NOT LOCAL</a> </Card.Title>
+
                         </Card.Body>
                       </Card>
                       </div>
