@@ -199,7 +199,7 @@ function App() {
                           "background" :"-webkit-linear-gradient(to right, #41295a, #41295a, #360033)",
                           "background": "linear-gradient(to right, #41295a, #41295a, #360033)"}}>
                         <Card.Body>
-                          <Card.Title> 🗂️ <a style={{"color": "ghostwhite"}} href={blobUrl.split("$")[2]} key={i} download>{blobUrl.split("$")[0]}</a> </Card.Title>
+                          <Card.Title> 🗂️ <a style={{"color": "ghostwhite"}} href={blobUrl.split("$")[2]} key={i} download={`${blobUrl.split("$")[0]}`}>{blobUrl.split("$")[0]}</a> </Card.Title>
                         </Card.Body>
                       </Card>
                       </div>
