@@ -18,6 +18,10 @@ function App() {
 
   let [downloadableBlobUrls, setDownloadableBlobsUrl] = useState([]);
 
+  /**
+   * Use to generate b64 data url above the blob since it's local and chrome security block download local files from another devies
+   * @param {*} blob 
+   */
   const blob2b64 = (blob) => new Promise( (resolve, reject) => {
     const reader = new FileReader;
     reader.onerror = () => {};
@@ -195,9 +199,7 @@ function App() {
                           "background" :"-webkit-linear-gradient(to right, #41295a, #41295a, #360033)",
                           "background": "linear-gradient(to right, #41295a, #41295a, #360033)"}}>
                         <Card.Body>
-                          <Card.Title> 🗂️ <a style={{"color": "ghostwhite"}} href={blobUrl.split("$")[1]} key={i} download>{blobUrl.split("$")[0]}</a> </Card.Title>
-                          <Card.Title> 🗂️ <a style={{"color": "ghostwhite"}} href={blobUrl.split("$")[2]} key={i} download>{blobUrl.split("$")[0]} - NOT LOCAL</a> </Card.Title>
-
+                          <Card.Title> 🗂️ <a style={{"color": "ghostwhite"}} href={blobUrl.split("$")[2]} key={i} download>{blobUrl.split("$")[0]}</a> </Card.Title>
                         </Card.Body>
                       </Card>
                       </div>
