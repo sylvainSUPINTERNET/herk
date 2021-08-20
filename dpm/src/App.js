@@ -9,7 +9,6 @@ import 'react-toastify/dist/ReactToastify.css';
 import { Card, Button } from 'react-bootstrap';
 import { FcDocument } from "react-icons/fc";
 
-
 function App() {
   const [sharingUuid, setSharingUuid] = useState("");
   
@@ -105,6 +104,8 @@ function App() {
         console.log(e);
       }
     }
+
+  
     ws.onopen = ev => {
       ws.send(JSON.stringify({
         "topic":"join",
@@ -217,6 +218,8 @@ function App() {
 
 
 
+
+                
 
     </div>
   );

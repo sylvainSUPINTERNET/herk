@@ -69,7 +69,9 @@ wss.on("connection", function(ws) {
       if ( clients[hash] ) {
         clients[hash].push(ws);
       } else {
-        clients[hash] = new Array(ws);
+        if ( hash !== "") {
+          clients[hash] = new Array(ws);
+        }
       }
 
       // Init "hub" for the uploaded files in room 
@@ -111,12 +113,13 @@ wss.on("connection", function(ws) {
 
 });
 
-
 // DEV
-//server.listen(5000)
-
-
-server.listen(PORT, async () => {
+if ( process.env.NODE_ENV === "DEV" ) {
+  console.log(`[API] starts on ${5000} - DEV`);
+  server.listen(5000)
+} else {
+  console.log("STOP");
+  server.listen(PORT, async () => {
     // heroku config:set PGSSLMODE=no-verify
     try {
       const sequelize = new Sequelize(`${process.env.DATABASE_URL}`, {
@@ -152,3 +155,7 @@ server.listen(PORT, async () => {
 
     console.log(`server started on port ${PORT}`);
 })
+}
+
+
+

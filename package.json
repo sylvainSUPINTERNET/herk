@@ -7,11 +7,13 @@
     "heroku-postbuild": "cd ./dpm && npm i && npm run build",
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node index.js",
-    "dev": "cd ./dpm && npm run build && cd .. && node index.js"
+    "dev": "cd ./dpm && npm run build && cd .. && ENV=DEV node index.js",
+    "dev-back": "set NODE_ENV=DEV&& node index.js" 
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@grpc/grpc-js": "^1.3.6",
     "body-parser": "^1.19.0",
     "bootstrap": "^5.0.2",
     "cors": "^2.8.5",

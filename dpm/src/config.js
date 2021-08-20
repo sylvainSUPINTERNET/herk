@@ -1,4 +1,3 @@
 export const conf = {
-    //"WS_URL": "ws://localhost:5000"
-    "WS_URL": "wss://herkdpm.herokuapp.com" // prod
+    "WS_URL": process.env.REACT_APP_ENV === "DEV" ? "ws://localhost:5000" : "wss://herkdpm.herokuapp.com"
 }
