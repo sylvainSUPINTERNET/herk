@@ -8,6 +8,8 @@ import 'react-toastify/dist/ReactToastify.css';
 
 import { Card, Button } from 'react-bootstrap';
 import { FcDocument } from "react-icons/fc";
+import { GiTeleport, GiThreeFriends, GiTabletopPlayers, GiStigmata } from "react-icons/gi";
+import DeleteModal from "./components/DeleteModal"
 
 function App() {
   const [sharingUuid, setSharingUuid] = useState("");
@@ -17,6 +19,10 @@ function App() {
 
   let [downloadableBlobUrls, setDownloadableBlobsUrl] = useState([]);
 
+  let convertFileSizeToMb = (bytes) => {
+    return (bytes / (1024*1024)).toFixed(2);
+  }
+  
   /**
    * Use to generate b64 data url above the blob since it's local and chrome security block download local files from another devies
    * @param {*} blob 
@@ -56,6 +62,21 @@ function App() {
       let m = new Map();
       let arrFilesDataTransfer = Array.from(event.dataTransfer.files);
       arrFilesDataTransfer.map( async (file,i) => {
+        console.log(file);
+        if ( convertFileSizeToMb(file.size) > conf.UPLOAD_WS_PAYLOAD_MAX_SIZE ) {
+
+          toast.error(`Size max is ${conf.UPLOAD_WS_PAYLOAD_MAX_SIZE} MB !`, {
+            position: "top-center",
+            autoClose: 5000,
+            hideProgressBar: true,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            });
+
+          return
+        }
         blob2b64(file).then( b64Url => {
 
           m.set(file.name, `${file.name}$${URL.createObjectURL(file)}$${b64Url}`);
@@ -68,7 +89,6 @@ function App() {
             [...filesUrls.keys()].map( (key,i) => {
               blobUrlsList = [...blobUrlsList, filesUrls.get(key)]
             })
-
             ws.send(JSON.stringify({
               "topic": "uploadFiles",
               "blobFiles": blobUrlsList,
@@ -92,6 +112,7 @@ function App() {
       try {
         const {topic, payload} = JSON.parse(msg.data);
         if ( topic === "downloadable" ) {
+          console.log("response")
           setDownloadableBlobsUrl(payload);
         }
 
@@ -107,10 +128,12 @@ function App() {
 
   
     ws.onopen = ev => {
-      ws.send(JSON.stringify({
-        "topic":"join",
-        "hash": sharingUuid
-      }))
+        ws.send(JSON.stringify({
+          "topic":"join",
+          "hash": sharingUuid
+        }));
+      
+
     }
 
     
@@ -131,7 +154,7 @@ function App() {
       });
 
       const el = document.createElement('textarea');
-      el.value = sharingUuid;
+      el.value = window.location.href;
       document.body.appendChild(el);
       el.select();
       document.execCommand('copy');
@@ -155,7 +178,7 @@ function App() {
 
 
       <ToastContainer
-        position="top-right"
+        position="top-center"
         autoClose={5000}
         hideProgressBar
         newestOnTop={false}
@@ -192,15 +215,25 @@ function App() {
 
 
 
+
               <div style={{"display": "flex", "flexFlow": "wrap", justifyContent: "center"}}>
 
                   {downloadableBlobUrls && downloadableBlobUrls.length > 0 && downloadableBlobUrls.map((blobUrl, i) => {
                     return <div className="card-1 m-2">
-                      <Card style={{            "background": "#360033",
-                          "background" :"-webkit-linear-gradient(to right, #41295a, #41295a, #360033)",
-                          "background": "linear-gradient(to right, #41295a, #41295a, #360033)"}}>
+                      <Card style={{ borderRadius: "10px", color:"white", backgroundImage:"linear-gradient(to left bottom, #001816, #00222c, #002b4c, #00306d, #002b81, #173090, #28369e, #383bad, #5357c2, #6d74d7, #8791eb, #a3afff)"}}>
                         <Card.Body>
+                          <DeleteModal link={blobUrl} ws={ws} sharingUuid={sharingUuid} pos={i}/>
                           <Card.Title> 🗂️ <a style={{"color": "ghostwhite"}} href={blobUrl.split("$")[2]} key={i} download={`${blobUrl.split("$")[0]}`}>{blobUrl.split("$")[0]}</a> </Card.Title>
+                        </Card.Body>
+                      </Card>
+                      </div>
+                  })}
+
+                    {[1,2,3,4,5,6,8,9].map((blobUrl, i) => {
+                    return <div className="card-1 m-2" style={{"maxWidth": "15em", alignSelf: "start"}}>
+                      <Card style={{ borderRadius: "10px", color:"white", backgroundImage:"linear-gradient(to left bottom, #001816, #00222c, #002b4c, #00306d, #002b81, #173090, #28369e, #383bad, #5357c2, #6d74d7, #8791eb, #a3afff)"}}>
+                        <Card.Body>
+                          <Card.Title> 🗂️ <a style={{"color": "ghostwhite"}}>eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee</a> </Card.Title>
                         </Card.Body>
                       </Card>
                       </div>
@@ -226,3 +259,5 @@ function App() {
 }
 
 export default App;
+
+

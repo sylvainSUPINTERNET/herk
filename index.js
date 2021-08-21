@@ -47,7 +47,7 @@ let server = http.createServer(app);
 const clients = {};
 const uploads = {};
 
-const wss = new WebSocketServer({server: server});
+const wss = new WebSocketServer({server: server, maxPayload: 1e+9}); // 1Gb ( converted into Kb)
 console.log("WSS server created");
 
 wss.on("connection", function(ws) {
@@ -57,6 +57,10 @@ wss.on("connection", function(ws) {
   ws.on("close", function() {
     console.log("websocket connection close")
   });
+
+  ws.on("erro", err => {
+    console.log(err)
+  })
 
 
   ws.on('message', msg => {
@@ -107,6 +111,16 @@ wss.on("connection", function(ws) {
       }
 
     } 
+
+
+    if ( topic === "removeFile" ) {
+      const {position, hash} = data;
+      uploads[hash].splice(position, 1);
+      clients[hash].map( socket => socket.send(JSON.stringify({
+        "topic": "downloadable",
+        "payload": uploads[hash]
+      })));
+    }
 
   })
 

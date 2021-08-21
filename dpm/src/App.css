@@ -2,6 +2,9 @@
 @import url('https://fonts.googleapis.com/css?family=Ubuntu');
 
 
+
+
+
 .neonText {
   color: #fff;
   text-shadow:
@@ -24,14 +27,10 @@ body {
   -moz-animation: AnimationName 60s ease infinite;
   animation: AnimationName 60s ease infinite; */
 
-  background: #03001e;  /* fallback for old browsers */
-  background: -webkit-linear-gradient(to right, #fdeff9, #ec38bc, #7303c0, #03001e);  /* Chrome 10-25, Safari 5.1-6 */
-  background: linear-gradient(to right, #fdeff9, #ec38bc, #7303c0, #03001e); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-  
+  background-image: radial-gradient(circle, #00897d, #00747d, #165e72, #2b495f, #2f3646, #2a2d3f, #272538, #241c30, #231839, #1e1443, #16104d, #000c57);
 
   height: 100vh;
   margin: 0;
-  overflow: hidden;
   padding: 2rem;
   color: white;
   font-family: 'Ubuntu';
