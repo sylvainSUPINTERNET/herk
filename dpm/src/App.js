@@ -219,21 +219,11 @@ function App() {
               <div style={{"display": "flex", "flexFlow": "wrap", justifyContent: "center"}}>
 
                   {downloadableBlobUrls && downloadableBlobUrls.length > 0 && downloadableBlobUrls.map((blobUrl, i) => {
-                    return <div className="card-1 m-2">
+                    return <div className="card-1 m-2" style={{"maxWidth": "15em", alignSelf: "start"}}>
                       <Card style={{ borderRadius: "10px", color:"white", backgroundImage:"linear-gradient(to left bottom, #001816, #00222c, #002b4c, #00306d, #002b81, #173090, #28369e, #383bad, #5357c2, #6d74d7, #8791eb, #a3afff)"}}>
                         <Card.Body>
                           <DeleteModal link={blobUrl} ws={ws} sharingUuid={sharingUuid} pos={i}/>
                           <Card.Title> 🗂️ <a style={{"color": "ghostwhite"}} href={blobUrl.split("$")[2]} key={i} download={`${blobUrl.split("$")[0]}`}>{blobUrl.split("$")[0]}</a> </Card.Title>
-                        </Card.Body>
-                      </Card>
-                      </div>
-                  })}
-
-                    {[1,2,3,4,5,6,8,9].map((blobUrl, i) => {
-                    return <div className="card-1 m-2" style={{"maxWidth": "15em", alignSelf: "start"}}>
-                      <Card style={{ borderRadius: "10px", color:"white", backgroundImage:"linear-gradient(to left bottom, #001816, #00222c, #002b4c, #00306d, #002b81, #173090, #28369e, #383bad, #5357c2, #6d74d7, #8791eb, #a3afff)"}}>
-                        <Card.Body>
-                          <Card.Title> 🗂️ <a style={{"color": "ghostwhite"}}>eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee</a> </Card.Title>
                         </Card.Body>
                       </Card>
                       </div>
